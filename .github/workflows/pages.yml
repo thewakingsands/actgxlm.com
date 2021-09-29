@@ -30,3 +30,12 @@ jobs:
           BRANCH: gh-pages
           FOLDER: www
           CLEAN: true
+      - name: Trigger API
+        run: |
+          curl -H "X-CafeMenu-Auth: $CAFEMENU_SECRET" \
+          https://cafemenu.lv5.one/edit/act/ready \
+          --data $([[ "$ACT_UPDATED" = yes ]] && echo 'data=1' || echo 'data=0') \
+          -so /dev/null
+        env:
+          CAFEMENU_SECRET: ${{ secrets.CAFEMENU_SECRET }}
+          ACT_UPDATED: ${{ github.event.inputs.actUpdated }}
